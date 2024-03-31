@@ -131,11 +131,8 @@ def define_boundary_condition_ns(variables_dict, physical_parameters_dict) :
     Domain = physical_parameters_dict['Domain'](Nx, Ny)
     lid_vel_x = physical_parameters_dict['lid_vel_x']
     lid_vel_y = physical_parameters_dict['lid_vel_y']
-
-    print("Domain: ", Domain)
-
-
     W = variables_dict['function_space_ns']
+
     # Define the Domain boundaries based on the previous setup
     (X0, Y0), (X1, Y1) = Domain
 
@@ -166,7 +163,7 @@ def define_boundary_condition_ns(variables_dict, physical_parameters_dict) :
     bc_u_left = fe.DirichletBC(W.sub(0), fe.Constant((0, 0)), left_boundary)
     bc_u_right = fe.DirichletBC(W.sub(0), fe.Constant((0, 0)), right_boundary)
     bc_u_top_x = fe.DirichletBC(W.sub(0).sub(0), fe.Constant(lid_vel_x), top_boundary)
-    bc_u_top_y = fe.DirichletBC(W.sub(0).sub(1), fe.Constant(-1.0), top_boundary)
+    bc_u_top_y = fe.DirichletBC(W.sub(0).sub(1), fe.Constant(lid_vel_y), top_boundary)
     bc_p_bottom = fe.DirichletBC(W.sub(1), fe.Constant(0.0), bottom_boundary)
 
 
@@ -183,12 +180,12 @@ def define_problem_ns(L, variables_dict, physical_parameters_dict):
 
     solution_vector_ns = variables_dict['solution_vector_ns']
 
-    abs_tol_ns = physical_parameters_dict["abs_tol_pf"]
-    rel_tol_ns = physical_parameters_dict["rel_tol_pf"]
-    linear_solver_ns = physical_parameters_dict['linear_solver_pf']
-    nonlinear_solver_ns = physical_parameters_dict['nonlinear_solver_pf']
-    preconditioner_ns = physical_parameters_dict['preconditioner_pf']
-    maximum_iterations_ns = physical_parameters_dict['maximum_iterations_pf']
+    abs_tol_ns = physical_parameters_dict["abs_tol_ns"]
+    rel_tol_ns = physical_parameters_dict["rel_tol_ns"]
+    linear_solver_ns = physical_parameters_dict['linear_solver_ns']
+    nonlinear_solver_ns = physical_parameters_dict['nonlinear_solver_ns']
+    preconditioner_ns = physical_parameters_dict['preconditioner_ns']
+    maximum_iterations_ns = physical_parameters_dict['maximum_iterations_ns']
 
     J = fe.derivative(L, solution_vector_ns)
     problem_ns = fe.NonlinearVariationalProblem(L, solution_vector_ns, Bc, J)
@@ -296,8 +293,6 @@ def update_solver_on_new_mesh_ns(mesh, physical_parameters_dict, old_solution_ve
     if variables_dict is not None:
 
 
-        solution_vector_ns = variables_dict['solution_vector_ns']
-        solution_vector_ns_0 = variables_dict['solution_vector_ns_0']
         phi_prev_interpolated_on_ns_mesh = variables_dict['phi_prev_interpolated_on_ns_mesh']
         u_prev_interpolated_on_ns_mesh = variables_dict['u_prev_interpolated_on_ns_mesh']
         space_ns = variables_dict['spaces_ns']
@@ -323,8 +318,8 @@ def update_solver_on_new_mesh_ns(mesh, physical_parameters_dict, old_solution_ve
         return { 
             "variables_dict": variables_dict, "solver_ns": solver_ns,
             "phi_prev_interpolated_on_ns_mesh": phi_prev_interpolated_on_ns_mesh, "u_prev_interpolated_on_ns_mesh": u_prev_interpolated_on_ns_mesh,
-            "space_ns": space_ns, "solution_vector_ns": solution_vector_ns, "solution_vector_ns_0": solution_vector_ns_0, "space_ns": space_ns, "Bc": Bc,
-            "function_space_ns": function_space_ns,"Bc":Bc
+            "space_ns": space_ns, "Bc": Bc,
+            "function_space_ns": function_space_ns
         }
 
 

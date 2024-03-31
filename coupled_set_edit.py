@@ -33,15 +33,17 @@ def refine_mesh_local(mesh, rad, center, max_level):
 
     return mesh_itr
 
+# rounding the domain number had effect on BC!
+
 physical_parameters_dict = {
     "dy": 0.4 ,
     "max_level": 3,
-    "Nx": 115.2,
-    "Ny": 230.4,
+    "Nx": 100,
+    "Ny": 100,
     "dt": 8E-3,
     "dy_coarse":lambda max_level, dy: 2**max_level * dy,
     "Domain": lambda Nx, Ny: [(0.0, 0.0), (Nx, Ny)],
-    "seed_center": [115.2/2, 230.4/2],
+    "seed_center": [100/2, 100/2],
     "a1": 0.8839,
     "a2": 0.6637,
     "w0": 1,
@@ -68,7 +70,7 @@ physical_parameters_dict = {
     "viscosity_solid": lambda mu_fluid: mu_fluid *1000 ,
     "viscosity_liquid": lambda mu_fluid: mu_fluid,
     "lid_vel_x": 0.0, 
-    "lid_vel_y": 1.0,
+    "lid_vel_y": -1.0,
     ###################### SOLVER PARAMETERS ######################
     "abs_tol_pf": 1E-6,  
     "rel_tol_pf": 1E-5,  
@@ -83,8 +85,8 @@ physical_parameters_dict = {
     "preconditioner_pf": 'ilu',       # 'hypre_amg', 'ilu', 'jacobi'
     'maximum_iterations_pf': 50,
     ####################### Rfinement Parameters ####################
-    "precentile_threshold_of_high_gradient_velocities": 90,
-    "precentile_threshold_of_high_gradient_pressures": 90,
+    "precentile_threshold_of_high_gradient_velocities": 98,
+    "precentile_threshold_of_high_gradient_pressures": 98,
     "precentile_threshold_of_high_gradient_U": 98,
     "interface_threshold_gradient": 0.0001,
 }
@@ -255,6 +257,8 @@ for it in tqdm( range(0, 10000000) ):
 
     T += dt
 
+
+
     if it == 20 or it % 30 == 25 :
         # refining the mesh
         mesh, mesh_info = refine_mesh(physical_parameters_dict, coarse_mesh, solution_vector_pf, spaces_pf, solution_vector_ns, space_ns, comm )
@@ -286,9 +290,6 @@ for it in tqdm( range(0, 10000000) ):
 
         
 
-        
-
-
     else: 
 
         ns_problem_dict = update_solver_on_new_mesh_ns(mesh, physical_parameters_dict, old_solution_vector_ns=None, old_solution_vector_0_ns=None, 
@@ -299,17 +300,18 @@ for it in tqdm( range(0, 10000000) ):
         
 
         # variables for solving the problem
-        solution_vector_ns = ns_problem_dict["solution_vector_ns"]
-        solution_vector_ns_0 = ns_problem_dict["solution_vector_ns_0"]
-        space_ns = ns_problem_dict["space_ns"]
+        variables_dict_ns = ns_problem_dict["variables_dict"] # new added
+        solution_vector_ns = variables_dict_ns["solution_vector_ns"]
+        solution_vector_ns_0 = variables_dict_ns["solution_vector_ns_0"]
+        space_ns = variables_dict_ns["spaces_ns"]
         Bc = ns_problem_dict["Bc"]
         solver_ns = ns_problem_dict["solver_ns"]
         # variables for solving the problem pf  
-        solution_vector_pf = pf_problem_dict["solution_vector_pf"]
-        solution_vector_pf_0 = pf_problem_dict["solution_vector_pf_0"]
-        spaces_pf = pf_problem_dict["spaces_pf"]
-        vel_answer_on_pf_mesh = pf_problem_dict["vel_answer_on_pf_mesh"]
-        function_space_ns = ns_problem_dict["function_space_ns"]
+        variables_dict_pf = pf_problem_dict["variables_dict_pf"] # new added
+        solution_vector_pf = variables_dict_pf["solution_vector_pf"]
+        solution_vector_pf_0 = variables_dict_pf["solution_vector_pf_0"]
+        spaces_pf = variables_dict_pf["spaces_pf"]
+        vel_answer_on_pf_mesh = variables_dict_pf["v_answer_on_pf_mesh"]
         solver_pf = pf_problem_dict["solver_pf"]
 
 
