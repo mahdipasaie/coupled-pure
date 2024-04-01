@@ -36,7 +36,7 @@ def refine_mesh_local(mesh, rad, center, max_level):
 # rounding the domain number had effect on BC!
 
 physical_parameters_dict = {
-    "dy": 0.4 ,
+    "dy": 0.8 ,
     "max_level": 3,
     "Nx": 250,
     "Ny": 250,
@@ -319,7 +319,7 @@ for it in tqdm( range(0, 10000000) ):
 
 
     ####### write first solution to file ########
-    if it % 1000 == 0: 
+    if it % 20 == 0: 
         solution_vectors = [solution_vector_ns_0, solution_vector_pf_0]
         times = [T, T]  # Assuming T_ns and T_pf are defined times for NS and PF solutions
         variable_names_list = [["Vel", "Press"], ["Phi", "U"]]  # Adjust variable names as needed

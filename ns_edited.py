@@ -105,18 +105,16 @@ def F2(variables_dict, physical_parameters_dict):
 
     dy_mu = ( viscosity_solid/ rho_solid )* (1 + phi)/2 + ( viscosity_liquid/rho_liquid ) * (1 - phi)/2 # depends on range of Phi
 
-    # f2 = (
-    #     fe.inner((u_answer - u_prev) / dt, test_1) * fe.dx
-    #     + fe.inner(fe.dot(u_answer, fe.grad(u_answer)), test_1) * fe.dx
-    #     + dy_mu * fe.inner( fe.grad(u_answer), fe.grad(test_1) )  * fe.dx
-    #     + fe.inner( p_answer, fe.div(test_1) ) * fe.dx
+    beta = 1e8  # Large penalization parameter, adjust based on your simulation needs
+    penalization_term = beta * (1 + phi)/2 * u_answer
 
-    # )
+
 
     F2 = (
         fe.inner((u_answer - u_prev) / dt, test_1) * fe.dx
         + fe.inner(fe.dot(u_answer, fe.grad(u_answer)), test_1) * fe.dx
         + dy_mu * fe.inner(sigma(u_answer, p_answer), epsilon(test_1)) * fe.dx
+        + fe.inner(penalization_term, test_1) * fe.dx  # Penalization term subtracted
 
     )
 
