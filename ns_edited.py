@@ -166,10 +166,15 @@ def define_boundary_condition_ns(variables_dict, physical_parameters_dict) :
     bc_u_top_y = fe.DirichletBC(W.sub(0).sub(1), fe.Constant(lid_vel_y), top_boundary)
     bc_p_bottom = fe.DirichletBC(W.sub(1), fe.Constant(0.0), bottom_boundary)
 
+    # Point for setting pressure
+    zero_pressure_point = fe.Point( (X0)/2,  (Y1)/2 )
+    bc_p_zero = fe.DirichletBC(W.sub(1), fe.Constant(0.0), lambda x, on_boundary: fe.near(x[0], zero_pressure_point.x()) and fe.near(x[1], zero_pressure_point.y()), method="pointwise")
+    # Combine all boundary conditions
+
 
     Bc = [bc_u_left, bc_u_right, bc_u_top_x, bc_u_top_y, bc_p_bottom]
+    # Bc = [bc_u_left, bc_u_right, bc_u_top_x, bc_u_top_y, bc_p_zero]
 
-    
 
     return  Bc
 

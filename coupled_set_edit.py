@@ -38,12 +38,12 @@ def refine_mesh_local(mesh, rad, center, max_level):
 physical_parameters_dict = {
     "dy": 0.4 ,
     "max_level": 3,
-    "Nx": 100,
-    "Ny": 100,
+    "Nx": 250,
+    "Ny": 250,
     "dt": 8E-3,
     "dy_coarse":lambda max_level, dy: 2**max_level * dy,
     "Domain": lambda Nx, Ny: [(0.0, 0.0), (Nx, Ny)],
-    "seed_center": [100/2, 100/2],
+    "seed_center": [250/2, 250/2],
     "a1": 0.8839,
     "a2": 0.6637,
     "w0": 1,
@@ -67,7 +67,7 @@ physical_parameters_dict = {
     "rho_solid": 2.7, # Kg/m^3s
     "mu_fluid": lambda tau_0_scale, W0_scale: 14E-4 * (tau_0_scale) / (W0_scale ** 2), # scaled here coeff just correct for dynamic (14E-4 Pa.s)
     "alpha_c": 9.2e-3,
-    "viscosity_solid": lambda mu_fluid: mu_fluid *1000 ,
+    "viscosity_solid": lambda mu_fluid: mu_fluid *1E6 , # 1E3 changed to 1E6
     "viscosity_liquid": lambda mu_fluid: mu_fluid,
     "lid_vel_x": 0.0, 
     "lid_vel_y": -1.0,
@@ -183,7 +183,7 @@ def update_time_step(physical_parameters_dict, solver_pf_information, solver_ns_
     return dt
 
 # Usage Example:
-file = fe.XDMFFile("Combined_Simulation_Data.xdmf")
+file = fe.XDMFFile("with_flow.xdmf")
 
 
 ##############################################################
@@ -319,7 +319,7 @@ for it in tqdm( range(0, 10000000) ):
 
 
     ####### write first solution to file ########
-    if it % 10 == 0: 
+    if it % 1000 == 0: 
         solution_vectors = [solution_vector_ns_0, solution_vector_pf_0]
         times = [T, T]  # Assuming T_ns and T_pf are defined times for NS and PF solutions
         variable_names_list = [["Vel", "Press"], ["Phi", "U"]]  # Adjust variable names as needed
