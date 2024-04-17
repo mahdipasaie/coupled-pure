@@ -36,7 +36,7 @@ def refine_mesh_local(mesh, rad, center, max_level):
 # rounding the domain number had effect on BC!
 
 physical_parameters_dict = {
-    "dy": 0.8 ,
+    "dy": 0.4 ,
     "max_level": 3,
     "Nx": 250,
     "Ny": 250,
@@ -183,7 +183,7 @@ def update_time_step(physical_parameters_dict, solver_pf_information, solver_ns_
     return dt
 
 # Usage Example:
-file = fe.XDMFFile("with_flow.xdmf")
+file = fe.XDMFFile( "Test5.xdmf" )
 
 
 ##############################################################

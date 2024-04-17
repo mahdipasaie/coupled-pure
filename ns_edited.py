@@ -103,10 +103,17 @@ def F2(variables_dict, physical_parameters_dict):
     phi = variables_dict['phi_prev_interpolated_on_ns_mesh']
 
 
-    dy_mu = ( viscosity_solid/ rho_solid )* (1 + phi)/2 + ( viscosity_liquid/rho_liquid ) * (1 - phi)/2 # depends on range of Phi
+    # dy_mu = ( viscosity_solid/ rho_solid )* (1 + phi)/2 + ( viscosity_liquid/rho_liquid ) * (1 - phi)/2 # depends on range of Phi
+    dy_mu = viscosity_liquid/rho_liquid ########## changed 
 
-    beta = 1e8  # Large penalization parameter, adjust based on your simulation needs
-    penalization_term = beta * (1 + phi)/2 * u_answer
+
+    beta = 1E12  # Large penalization parameter
+    # penalization_term = beta *  (1 + phi)/2   * u_answer
+
+    # threshold = 0.99  # Threshold close to 1 for activation
+    threshold = 0.99  # Threshold close to 1 for activation
+    penalization_term = fe.conditional(phi >= threshold, beta * (1 + phi) / 2 , 0)* u_answer
+
 
 
 
