@@ -1,6 +1,6 @@
 # Coupled Phase-Field and Fluid Flow Modeling in Additive Manufacturing
 
-![Microstructure](microstructure.jpg)
+![Microstructure](1.jpg)
 
 ## Overview
 
