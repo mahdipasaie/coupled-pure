@@ -20,4 +20,6 @@ To bridge this gap, our project is developing a phase-field modeling microstruct
 ## Project Overview
 
 ![Growth Under Convection](images/I2.png)
+
+
 ![Summary](images/I3.png)
