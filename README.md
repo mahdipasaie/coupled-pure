@@ -15,3 +15,9 @@ To bridge this gap, our project is developing a phase-field modeling microstruct
 
 📘 **Full Text Available on ResearchGate:**  
 [🔗 View Thesis PDF](https://www.researchgate.net/publication/378782785_DEVELOPING_A_COUPLED_MICROSTRUCTURE_FLUID_FLOW_MODEL_FOR_SOLIDIFICATION_IN_ADDITIVE_MANUFACTURING)
+
+
+## Project Overview
+
+![Growth Under Convection](images/I2.png)
+![Summary](images/I3.png)
